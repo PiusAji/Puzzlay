@@ -3,19 +3,15 @@
 
 // Get the correct API base URL for server vs client
 function getApiBaseUrl() {
-  // For Netlify builds, use the deploy URL.
-  if (process.env.NETLIFY && process.env.DEPLOY_PRIME_URL) {
-    return process.env.DEPLOY_PRIME_URL
-  }
-
   const payloadUrl = process.env.PAYLOAD_URL || 'http://localhost:3000'
 
-  // On server side, use the environment variable
+  // On the server, always use the PAYLOAD_URL
   if (typeof window === 'undefined') {
     return payloadUrl
   }
 
-  // On client side, use the current origin or fallback to the environment variable
+  // On the client, use the current origin or fallback to PAYLOAD_URL
+  // This is useful for local development where the client and server are on the same host
   return window.location.origin || payloadUrl
 }
 
@@ -103,14 +99,19 @@ export interface Story {
   updatedAt: string
 }
 
-// Generic API fetch function with error handling
+// Updated apiRequest function in your lib/api.ts
 async function apiRequest<T>(endpoint: string): Promise<T | null> {
   try {
     const baseUrl = getApiBaseUrl()
 
-    // Skip API calls during build time when running locally
-    if (typeof window === 'undefined' && baseUrl.includes('localhost')) {
-      console.log(`Skipping API request during build: ${endpoint}`)
+    // Only skip API calls during LOCAL development builds
+    // Allow API calls during production builds (Netlify)
+    if (
+      typeof window === 'undefined' &&
+      baseUrl.includes('localhost') &&
+      process.env.NODE_ENV !== 'production'
+    ) {
+      console.log(`Skipping API request during local build: ${endpoint}`)
       return null
     }
 
@@ -130,13 +131,14 @@ async function apiRequest<T>(endpoint: string): Promise<T | null> {
     const data = await response.json()
     return data
   } catch (error) {
-    // Don't log ECONNREFUSED errors during build time
+    // Only suppress errors during local builds
     if (
       error instanceof Error &&
       error.message.includes('ECONNREFUSED') &&
-      typeof window === 'undefined'
+      typeof window === 'undefined' &&
+      process.env.NODE_ENV !== 'production'
     ) {
-      console.log(`Build-time API call skipped for ${endpoint} (this is normal)`)
+      console.log(`Local build-time API call skipped for ${endpoint} (this is normal)`)
       return null
     }
     console.error(`API request error for ${endpoint}:`, error)
