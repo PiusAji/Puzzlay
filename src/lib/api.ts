@@ -99,16 +99,9 @@ export interface Story {
 }
 
 // Generic API fetch function with error handling
-// Generic API fetch function with error handling
 async function apiRequest<T>(endpoint: string): Promise<T | null> {
   try {
     const baseUrl = getApiBaseUrl()
-
-    // Skip API calls during build time when running locally
-    if (typeof window === 'undefined' && baseUrl.includes('localhost')) {
-      console.log(`Skipping API request during build: ${endpoint}`)
-      return null
-    }
 
     const response = await fetch(`${baseUrl}${endpoint}`, {
       headers: {
