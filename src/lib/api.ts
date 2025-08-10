@@ -3,6 +3,11 @@
 
 // Get the correct API base URL for server vs client
 function getApiBaseUrl() {
+  // For Netlify builds, use the deploy URL.
+  if (process.env.NETLIFY && process.env.DEPLOY_PRIME_URL) {
+    return process.env.DEPLOY_PRIME_URL
+  }
+
   const payloadUrl = process.env.PAYLOAD_URL || 'http://localhost:3000'
 
   // On server side, use the environment variable
@@ -102,6 +107,12 @@ export interface Story {
 async function apiRequest<T>(endpoint: string): Promise<T | null> {
   try {
     const baseUrl = getApiBaseUrl()
+
+    // Skip API calls during build time when running locally
+    if (typeof window === 'undefined' && baseUrl.includes('localhost')) {
+      console.log(`Skipping API request during build: ${endpoint}`)
+      return null
+    }
 
     const response = await fetch(`${baseUrl}${endpoint}`, {
       headers: {
