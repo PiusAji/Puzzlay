@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import Embla Carousel styles */
+@import './(frontend)/components/3d/ui/embla-carousel.css';
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes elementMorph {
+  0% {
+    border-radius: 40% 60% 70% 30% / 50% 60% 40% 50%;
+  }
+  25% {
+    border-radius: 60% 40% 30% 70% / 60% 40% 60% 40%;
+  }
+  50% {
+    border-radius: 30% 70% 40% 60% / 40% 60% 50% 50%;
+  }
+  75% {
+    border-radius: 70% 30% 60% 40% / 50% 50% 40% 60%;
+  }
+  100% {
+    border-radius: 40% 60% 70% 30% / 50% 60% 40% 50%;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.1);
+    opacity: 0.7;
+  }
+}
