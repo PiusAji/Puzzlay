@@ -97,13 +97,13 @@ export function StoriesSection({ stories }: StoriesSectionProps) {
   }
 
   return (
-    <section className="min-h-screen py-20">
+    <section id="stories-section" className="min-h-screen py-20 mt-20 md:mt-40">
       {/* Pre-rendered backdrop container - always present but invisible initially */}
       <div
         className={`
           container mx-auto px-6 rounded-2xl p-8 transform-gpu
           transition-all duration-1000 ease-out
-          ${isLoaded ? 'bg-white/20 backdrop-blur-sm' : 'bg-transparent'}
+          ${isLoaded ? ' backdrop-blur-sm' : 'bg-transparent'}
           ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
         `}
         style={{
@@ -118,7 +118,7 @@ export function StoriesSection({ stories }: StoriesSectionProps) {
           <h2 className="relative z-10 text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-500 to-blue-500 mb-6 drop-shadow-lg">
             ✨ Pilih Cerita Puzzle 🧩
           </h2>
-          <p className="text-2xl text-gray-800 max-w-3xl mx-auto drop-shadow-md">
+          <p className="text-2xl text-white max-w-3xl mx-auto drop-shadow-md">
             Ayo selesaikan puzzle ber-serie dan pilih cerita yang kamu suka, mainkan puzzle secara
             urut sesuai alur dari cerita! 💖
           </p>

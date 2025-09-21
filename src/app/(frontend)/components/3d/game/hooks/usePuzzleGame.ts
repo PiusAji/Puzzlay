@@ -25,41 +25,82 @@ export function usePuzzleGame(modelUrl: string, _textureUrl: string) {
   const playSuccessSound = useSound('/sounds/success.mp3', 0.6)
 
   // Generate scattered positions
-  const generatePositions = useCallback((count: number): THREE.Vector3[] => {
-    const positions: THREE.Vector3[] = []
+  const generatePositions = useCallback(
+    (count: number, minX: number, maxX: number, minZ: number, maxZ: number): THREE.Vector3[] => {
+      const positions: THREE.Vector3[] = []
+      const rangeX = maxX - minX
+      const rangeZ = maxZ - minZ
 
-    for (let i = 0; i < count; i++) {
-      let validPosition = false
-      let attempts = 0
-      let newPos: THREE.Vector3
+      for (let i = 0; i < count; i++) {
+        let validPosition = false
+        let attempts = 0
+        let newPos: THREE.Vector3
 
-      while (!validPosition && attempts < 100) {
-        newPos = new THREE.Vector3((Math.random() - 0.5) * 20, 0, Math.random() * 10 + 5)
+        while (!validPosition && attempts < 100) {
+          newPos = new THREE.Vector3(
+            Math.random() * rangeX + minX,
+            0,
+            Math.random() * rangeZ + minZ,
+          )
 
-        validPosition = positions.every((pos) => pos.distanceTo(newPos) >= MIN_PIECE_DISTANCE)
-        attempts++
+          validPosition = positions.every((pos) => pos.distanceTo(newPos) >= MIN_PIECE_DISTANCE)
+          attempts++
+        }
+
+        if (!validPosition) {
+          // Fallback to a more compact grid if random placement fails
+          const gridSize = Math.ceil(Math.sqrt(count))
+          const row = Math.floor(i / gridSize)
+          const col = i % gridSize
+          newPos = new THREE.Vector3(
+            minX + (col / gridSize) * rangeX,
+            0,
+            minZ + (row / gridSize) * rangeZ,
+          )
+        }
+
+        positions.push(newPos!)
       }
 
-      if (!validPosition) {
-        // Grid fallback
-        const gridSize = Math.ceil(Math.sqrt(count))
-        const row = Math.floor(i / gridSize)
-        const col = i % gridSize
-        newPos = new THREE.Vector3(
-          (col - gridSize / 2) * MIN_PIECE_DISTANCE,
-          0,
-          (row - gridSize / 2) * MIN_PIECE_DISTANCE + 8,
-        )
+      return positions
+    },
+    [],
+  )
+
+  const puzzleBounds: THREE.Box3 = useMemo(() => {
+    const box = new THREE.Box3()
+    // Calculate bounds based on original positions to keep the camera static
+    if (!scene) return box // Return empty box if scene is not available yet
+
+    const tempPieces: { mesh: THREE.Mesh; originalPosition: THREE.Vector3 }[] = []
+    scene.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        tempPieces.push({ mesh: child.clone(), originalPosition: child.position.clone() })
       }
+    })
 
-      positions.push(newPos!)
-    }
+    tempPieces.forEach((p: { mesh: THREE.Mesh; originalPosition: THREE.Vector3 }) => {
+      const meshClone = p.mesh.clone()
+      meshClone.position.copy(p.originalPosition)
+      meshClone.updateMatrixWorld(true) // Ensure world matrix is updated for correct bounding box calculation
+      box.expandByObject(meshClone)
+    })
+    return box
+  }, [scene])
 
-    return positions
-  }, [])
+  // Calculate scatter area bounds based on puzzleBounds
+  const scatterAreaBounds: THREE.Box3 = useMemo(() => {
+    const scatterPadding = 5 // Adjust this value as needed for desired padding
+    const bounds = puzzleBounds.clone()
+    bounds.min.x -= scatterPadding
+    bounds.max.x += scatterPadding
+    bounds.min.z -= scatterPadding
+    bounds.max.z += scatterPadding
+    return bounds
+  }, [puzzleBounds])
 
   // Initialize pieces
-  const initialPieceStates = useMemo(() => {
+  const initialPieceStates: PieceState[] = useMemo(() => {
     if (!scene) return []
 
     const extractedPieces: THREE.Mesh[] = []
@@ -72,7 +113,13 @@ export function usePuzzleGame(modelUrl: string, _textureUrl: string) {
 
     if (extractedPieces.length === 0) return []
 
-    const scatteredPositions = generatePositions(extractedPieces.length)
+    const scatteredPositions = generatePositions(
+      extractedPieces.length,
+      scatterAreaBounds.min.x,
+      scatterAreaBounds.max.x,
+      scatterAreaBounds.min.z,
+      scatterAreaBounds.max.z,
+    )
 
     const pieces = extractedPieces.map((mesh) => {
       const size = new THREE.Vector3()
@@ -102,20 +149,52 @@ export function usePuzzleGame(modelUrl: string, _textureUrl: string) {
       })
     })
 
+    // Identify the top-left piece and apply a small offset to its originalPosition
+    let minX = Infinity
+    let minZ = Infinity
+    let topLeftPieceId: string | null = null
+
+    pieces.forEach((p) => {
+      if (p.originalPosition.x < minX) {
+        minX = p.originalPosition.x
+      }
+      if (p.originalPosition.z < minZ) {
+        minZ = p.originalPosition.z
+      }
+    })
+
+    // Find the piece that is closest to the minX and minZ
+    let closestDist = Infinity
+    pieces.forEach((p) => {
+      const dist = Math.sqrt(
+        Math.pow(p.originalPosition.x - minX, 2) + Math.pow(p.originalPosition.z - minZ, 2),
+      )
+      if (dist < closestDist) {
+        closestDist = dist
+        topLeftPieceId = p.id
+      }
+    })
+
+    // Apply the fix: adjust the originalPosition of the top-left piece
+    if (topLeftPieceId) {
+      const TOP_LEFT_OFFSET = 0.1 // Small adjustment to move it slightly inward
+      pieces.forEach((p) => {
+        if (p.id === topLeftPieceId) {
+          p.originalPosition.x += TOP_LEFT_OFFSET
+          p.originalPosition.z += -0.07
+        }
+      })
+    }
+
     return pieces.map((p, i) => ({
       ...p,
       currentPosition: scatteredPositions[i].clone(),
     }))
-  }, [scene, generatePositions])
+  }, [scene, generatePositions, scatterAreaBounds])
 
   const [pieceStates, setPieceStates] = useState<PieceState[]>(initialPieceStates)
   const [completedConnections, setCompletedConnections] = useState(0)
   const dragStartPositions = useRef<Map<string, THREE.Vector3>>(new Map())
-
-  useEffect(() => {
-    setPieceStates(initialPieceStates)
-    setCompletedConnections(0)
-  }, [initialPieceStates])
 
   // Reset lastConnected flag
   useEffect(() => {
@@ -169,9 +248,21 @@ export function usePuzzleGame(modelUrl: string, _textureUrl: string) {
         if (!draggedPiece) return newStates
 
         let connectionMade = false
+        console.log(`--- Drag End for Piece: ${pieceId} ---`)
+        console.log(
+          `Dragged Piece Current Position (before snap):`,
+          draggedPiece.currentPosition.toArray(),
+        )
+        console.log(`Dragged Piece Original Position:`, draggedPiece.originalPosition.toArray())
+        console.log(`SNAP_THRESHOLD:`, SNAP_THRESHOLD)
+
         for (const partnerInfo of draggedPiece.partners) {
           const partner = newStates.find((p) => p.id === partnerInfo.partnerId)
           if (!partner) continue
+
+          console.log(`  Partner: ${partner.id}`)
+          console.log(`  Partner Current Position:`, partner.currentPosition.toArray())
+          console.log(`  Partner Original Position:`, partner.originalPosition.toArray())
 
           const distance = draggedPiece.currentPosition.distanceTo(partner.currentPosition)
 
@@ -242,5 +333,6 @@ export function usePuzzleGame(modelUrl: string, _textureUrl: string) {
     completedConnections,
     totalConnections,
     totalPieces,
+    puzzleBounds,
   }
 }

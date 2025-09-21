@@ -82,7 +82,7 @@ export function LoadingSpinner({ contentReady = false }: LoadingSpinnerProps) {
   }, [contentReady, isClient])
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-pink-400 via-purple-500 to-blue-500 relative overflow-hidden">
+    <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-pink-400 via-purple-500 to-blue-500 overflow-hidden z-[9999]">
       {/* Floating sparkles */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Yellow sparkles */}

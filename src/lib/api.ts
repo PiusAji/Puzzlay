@@ -106,14 +106,15 @@ async function apiRequest<T>(endpoint: string): Promise<T | null> {
 
     // Only skip API calls during LOCAL development builds
     // Allow API calls during production builds (Netlify)
-    if (
-      typeof window === 'undefined' &&
-      baseUrl.includes('localhost') &&
-      process.env.NODE_ENV !== 'production'
-    ) {
-      console.log(`Skipping API request during local build: ${endpoint}`)
-      return null
-    }
+    // Temporarily disable API request skipping during local development for debugging
+    // if (
+    //   typeof window === 'undefined' &&
+    //   baseUrl.includes('localhost') &&
+    //   process.env.NODE_ENV !== 'production'
+    // ) {
+    //   console.log(`Skipping API request during local build: ${endpoint}`)
+    //   return null
+    // }
 
     const response = await fetch(`${baseUrl}${endpoint}`, {
       headers: {
@@ -132,15 +133,17 @@ async function apiRequest<T>(endpoint: string): Promise<T | null> {
     return data
   } catch (error) {
     // Only suppress errors during local builds
-    if (
-      error instanceof Error &&
-      error.message.includes('ECONNREFUSED') &&
-      typeof window === 'undefined' &&
-      process.env.NODE_ENV !== 'production'
-    ) {
-      console.log(`Local build-time API call skipped for ${endpoint} (this is normal)`)
-      return null
-    }
+    // Temporarily disable error suppression for ECONNREFUSED during local development for debugging
+    // if (
+    //   error instanceof Error &&
+    //   error.message.includes('ECONNREFUSED') &&
+    //   typeof window === 'undefined' &&
+    //   baseUrl.includes('localhost') && // Added baseUrl check for consistency
+    //   process.env.NODE_ENV !== 'production'
+    // ) {
+    //   console.log(`Local build-time API call skipped for ${endpoint} (this is normal)`)
+    //   return null
+    // }
     console.error(`API request error for ${endpoint}:`, error)
     return null
   }
@@ -202,7 +205,7 @@ export const storiesApi = {
   // Get all published stories
   async getStories(): Promise<Story[] | null> {
     const response = await apiRequest<{ docs: Story[] }>(
-      '/api/stories?where[status][equals]=published',
+      '/api/stories?where[status][equals]=published&depth=1',
     )
     return response?.docs || null
   },

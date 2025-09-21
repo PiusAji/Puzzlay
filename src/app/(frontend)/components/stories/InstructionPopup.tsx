@@ -93,9 +93,9 @@ export function InstructionPopup({ isOpen, onClose, onReady, storyTitle }: Instr
                 </div>
                 <div className="flex items-start gap-3">
                   <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-xs font-medium elementMorph">
-                    Klik Kiri
+                    Klik
                   </span>
-                  <span className="flex-1">Pada area kosong untuk putar kamera 🔄</span>
+                  <span className="flex-1">Pada tombol tengah mouse untuk memutar kamera 🔄</span>
                 </div>
                 <div className="flex items-start gap-3">
                   <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium elementMorph">

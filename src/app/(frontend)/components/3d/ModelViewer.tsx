@@ -37,7 +37,7 @@ function ModelViewerClient({ modelUrl, textureUrl, storySectionRef }: ModelViewe
       <CameraController storyRef={storySectionRef} />
 
       {/* Simple solid background */}
-      <color attach="background" args={['#f8f9fa']} />
+      <color attach="background" args={['#1a1a2e']} />
 
       {/* Lighting */}
       <SceneLighting />

@@ -46,6 +46,7 @@ function Scene({ modelUrl, textureUrl, onPuzzleComplete, onProgress }: PuzzleGam
     completedConnections,
     totalConnections,
     totalPieces,
+    puzzleBounds,
   } = usePuzzleGame(modelUrl, textureUrl)
 
   const [controlsEnabled, setControlsEnabled] = useState(true)
@@ -100,8 +101,8 @@ function Scene({ modelUrl, textureUrl, onPuzzleComplete, onProgress }: PuzzleGam
   return (
     <Suspense fallback={<LoadingFallback />}>
       {/* Camera and Controls */}
-      <PuzzleCamera />
-      <PuzzleControls enabled={controlsEnabled} />
+      <PuzzleCamera bounds={puzzleBounds} />
+      <PuzzleControls enabled={controlsEnabled && !puzzleCompleted} bounds={puzzleBounds} />
 
       {/* Lighting */}
       <ambientLight intensity={ambientIntensity} />
@@ -126,22 +127,6 @@ function Scene({ modelUrl, textureUrl, onPuzzleComplete, onProgress }: PuzzleGam
       ))}
 
       {/* Solved area indicator */}
-      <mesh position={[0, -0.1, -8]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[8, 8]} />
-        <meshStandardMaterial
-          color={puzzleCompleted ? '#004400' : '#333333'}
-          transparent
-          opacity={0.3}
-          emissive={puzzleCompleted ? '#002200' : '#000000'}
-          emissiveIntensity={puzzleCompleted ? 0.2 : 0}
-        />
-      </mesh>
-
-      {/* Grid helper for solved area */}
-      <gridHelper
-        args={[8, 8, puzzleCompleted ? '#008800' : '#666666', '#444444']}
-        position={[0, 0, -8]}
-      />
 
       {/* Completion celebration */}
       <CompletionCelebration show={puzzleCompleted} />
@@ -159,7 +144,7 @@ export function PuzzleGame({
     <>
       {/* Background gradient */}
       <color attach="background" args={['#1a1a2e']} />
-      <fog attach="fog" args={['#1a1a2e', 15, 35]} />
+      <fog attach="fog" args={['#1a1a2e', 20, 45]} />
 
       <Scene
         modelUrl={modelUrl}

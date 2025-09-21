@@ -1,5 +1,3 @@
-'use client'
-
 import { Bounded } from '../../Bounded'
 import { Logo } from '../../ui/Logo'
 import type { SiteSettings, Nav } from '../../../../../lib/api'
@@ -19,17 +17,13 @@ export function HeroOverlay({ siteSettings, navigationData, heroContent }: HeroO
       {/* Top section */}
       <Bounded className="pointer-events-auto">
         <div className="flex justify-between items-center">
-          <Logo siteSettings={siteSettings} />
-          <Header navigationData={navigationData} />
+          <Header navigationData={navigationData} siteSettings={siteSettings} />
         </div>
       </Bounded>
 
       {/* Hero Content - This will be centered in the available space */}
-      <div className="flex-grow flex items-center justify-center">{heroContent}</div>
-
-      {/* Bottom section - Empty */}
-      <Bounded className="pointer-events-auto">
-        <div className="h-20" />
+      <Bounded>
+        <div className="flex-grow flex items-center justify-center">{heroContent}</div>
       </Bounded>
     </div>
   )

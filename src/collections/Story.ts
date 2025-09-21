@@ -86,6 +86,13 @@ const Story: CollectionConfig = {
       admin: {
         description: 'Exactly 3 puzzles that must be completed progressively',
       },
+      validate: (value) => {
+        // This validation runs on the entire 'puzzles' array
+        if (value && typeof value === 'object' && 'slug' in value) {
+          return 'The "slug" field is not allowed directly on the "puzzles" array.'
+        }
+        return true
+      },
       fields: [
         {
           name: 'order',

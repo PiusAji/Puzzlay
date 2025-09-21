@@ -5,24 +5,34 @@ import React from 'react'
 import { Story } from '@/payload-types' // Use payload types
 import StoryPuzzleLoader from './StoryPuzzleLoader'
 
-const fetchStory = async (slug: string): Promise<Story | null> => {
+const fetchStoryAndPuzzle = async (
+  storySlug: string,
+): Promise<{ story: Story; puzzle: Story['puzzles'][0] } | null> => {
   const payload = await getPayload({ config })
+
   const result = await payload.find({
     collection: 'stories',
     where: {
       slug: {
-        equals: slug,
+        equals: storySlug,
       },
     },
     limit: 1,
-    depth: 2, // Ensure media is populated
+    depth: 2, // Ensure media and puzzles are populated
   })
 
   if (result.docs.length === 0) {
     return null
   }
 
-  return result.docs[0]
+  const story = result.docs[0]
+  const puzzle = story.puzzles[0] // Get the first puzzle
+
+  if (!puzzle) {
+    return null
+  }
+
+  return { story, puzzle }
 }
 
 export async function generateStaticParams() {
@@ -30,28 +40,33 @@ export async function generateStaticParams() {
   const stories = await payload.find({
     collection: 'stories',
     limit: 100,
+    depth: 1, // Ensure puzzles are populated
   })
 
-  return stories.docs.map(({ slug }) => ({
-    slug,
+  const params = stories.docs.map((story) => ({
+    slug: story.slug, // Only use story slug
   }))
+
+  return params
 }
 
 type StoryPageProps = {
-  params: Promise<{
+  params: {
     slug: string
-  }>
+  }
 }
 
 export default async function StoryPage({ params }: StoryPageProps) {
   // Await the params before using them
-  const { slug } = await params
+  const { slug } = params
 
-  const story = await fetchStory(slug)
+  const result = await fetchStoryAndPuzzle(slug)
 
-  if (!story) {
+  if (!result) {
     notFound()
   }
 
-  return <StoryPuzzleLoader story={story} />
+  const { story, puzzle } = result
+
+  return <StoryPuzzleLoader story={story} initialPuzzle={puzzle} />
 }

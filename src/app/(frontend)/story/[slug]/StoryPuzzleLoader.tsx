@@ -13,8 +13,9 @@ const StoryPuzzleClient = dynamic(() => import('./StoryPuzzleClient'), {
 
 interface StoryPuzzleLoaderProps {
   story: Story
+  initialPuzzle: Story['puzzles'][0]
 }
 
-export default function StoryPuzzleLoader({ story }: StoryPuzzleLoaderProps) {
-  return <StoryPuzzleClient story={story} />
+export default function StoryPuzzleLoader({ story, initialPuzzle }: StoryPuzzleLoaderProps) {
+  return <StoryPuzzleClient story={story} initialPuzzle={initialPuzzle} />
 }
