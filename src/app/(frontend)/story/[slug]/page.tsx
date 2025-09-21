@@ -51,14 +51,14 @@ export async function generateStaticParams() {
 }
 
 type StoryPageProps = {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export default async function StoryPage({ params }: StoryPageProps) {
   // Await the params before using them
-  const { slug } = params
+  const { slug } = await params
 
   const result = await fetchStoryAndPuzzle(slug)
 
