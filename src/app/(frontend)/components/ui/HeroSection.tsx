@@ -201,7 +201,7 @@ export function HeroSection({ hero }: HeroSectionProps) {
       </div>
 
       {/* H1 - Top Left */}
-      <div className="absolute top-16 left-8 lg:left-16">
+      <div className="absolute top-24 lg:top-16 left-8 lg:left-16">
         <h1 className="relative">
           {/* Background text for depth */}
           <span
@@ -231,7 +231,7 @@ export function HeroSection({ hero }: HeroSectionProps) {
             }}
           >
             <div>BERMAIN BERSAMA</div>
-            <div className="pl-2">PUZZLAY</div>
+            <div className="pt-2">PUZZLAY</div>
           </div>
 
           {/* Glowing accent line */}
