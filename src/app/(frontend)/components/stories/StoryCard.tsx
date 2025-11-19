@@ -30,7 +30,7 @@ export function StoryCard({ story, index }: StoryCardProps) {
     <>
       <div
         onClick={handleCardClick}
-        className="group relative bg-black/80 backdrop-blur-sm rounded-2xl overflow-hidden hover:bg-black/90 transition-all duration-500 hover:scale-105 hover:shadow-2xl border border-white/20 h-full flex flex-col cursor-pointer"
+        className="group relative bg-gradient-to-br from-zinc-800 via-zinc-900 to-gray-900 backdrop-blur-sm rounded-2xl overflow-hidden hover:bg-black/90 transition-all duration-500 hover:scale-105 hover:shadow-2xl border border-white/20 h-full flex flex-col cursor-pointer"
         style={{
           animationDelay: `${index * 0.1}s`,
         }}

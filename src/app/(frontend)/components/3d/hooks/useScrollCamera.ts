@@ -67,9 +67,11 @@ export function useScrollCamera(storySectionRef: React.RefObject<HTMLElement | n
     const scrollTimeline = gsap.timeline({
       scrollTrigger: {
         trigger: storySection,
-        start: 'top bottom', // Animation starts when the top of the stories section hits the bottom of the screen
-        end: 'bottom bottom', // Animation ends when the bottom of the stories section hits the bottom of the screen
-        scrub: 1, // Smoothly ties the animation progress to the scrollbar
+        start: 'top bottom', // Start as soon as stories section enters bottom of viewport
+        end: 'bottom bottom', // End when it's near the top (shorter distance = faster animation)
+        scrub: 0.2, // Very responsive
+        invalidateOnRefresh: true,
+        anticipatePin: 1,
       },
       defaults: {
         ease: 'power2.inOut',

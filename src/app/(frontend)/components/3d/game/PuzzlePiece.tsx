@@ -115,7 +115,9 @@ export function PuzzlePiece({
 
   const bind = useDrag(
     ({ active, first, last, xy, event }) => {
+      // Only stop propagation, don't prevent default
       event?.stopPropagation()
+
       setControlsEnabled(!active)
 
       if (first) {

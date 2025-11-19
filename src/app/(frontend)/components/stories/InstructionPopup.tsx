@@ -41,7 +41,7 @@ export function InstructionPopup({ isOpen, onClose, onReady, storyTitle }: Instr
       </div>
 
       <div
-        className={`relative rounded-xl w-full max-w-lg bg-gradient-to-br from-pink-400 via-purple-500 to-blue-500 p-[1px] elementMorph transition-all duration-300 ${
+        className={`relative rounded-xl w-full max-w-2xl bg-gradient-to-br from-pink-400 via-purple-500 to-blue-500 p-[1px] elementMorph transition-all duration-300 ${
           isOpen ? 'scale-100 rotate-0' : 'scale-95 rotate-3'
         }`}
         onClick={(e) => e.stopPropagation()}
@@ -74,15 +74,35 @@ export function InstructionPopup({ isOpen, onClose, onReady, storyTitle }: Instr
 
           {/* Instructions */}
           <div className="space-y-4 text-gray-700 text-sm sm:text-base">
-            {/* Game Rules */}
+            {/* Game Rules - Updated with new content */}
             <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-lg elementMorph">
-              <h3 className="font-semibold text-purple-700 mb-2 flex items-center gap-2">
-                📋 Cara Bermain
+              <h3 className="font-semibold text-purple-700 mb-3 flex items-center gap-2">
+                📋 Petunjuk Permainan Puzzle Gambar Berseri
               </h3>
-              <p className="leading-relaxed">
-                Selesaikan puzzle berurut dari puzzle pertama sampai puzzle ke-3. Semua puzzle
-                memiliki 9 potongan. Hubungkan semua potongan untuk menyelesaikan puzzlenya! 🎯
-              </p>
+              <ol className="space-y-2 leading-relaxed list-decimal list-inside">
+                <li>Pilih Puzzle Gambar Berseri sesuai arahan.</li>
+                <li>
+                  Permainan dilakukan dengan menggeser potongan puzzle pada layar untuk menemukan
+                  posisi yang tepat.
+                </li>
+                <li>
+                  Susun semua potongan puzzle hingga membentuk gambar berseri yang lengkap dan
+                  runtut.
+                </li>
+                <li>
+                  Setelah puzzle selesai, amati gambar dengan teliti untuk memahami alur ceritanya.
+                </li>
+                <li>
+                  Ambil kertas tugas yang telah dibagikan guru. Buatlah cerita berdasarkan 1 puzzle
+                  gambar berseri yang telah kamu selesaikan.
+                </li>
+                <li>
+                  Tulislah cerita secara runtut sesuai urutan gambar (berisi tokoh, latar, dan alur:
+                  awal-tengah-akhir)
+                </li>
+                <li>Gunakan kalimat yang jelas dan mudah dipahami.</li>
+                <li>Periksa kembali tulisanmu sebelum dikumpulkan.</li>
+              </ol>
             </div>
 
             {/* Controls */}
@@ -191,6 +211,32 @@ export function InstructionPopup({ isOpen, onClose, onReady, storyTitle }: Instr
           }
         }
       `}</style>
+    </div>
+  )
+}
+
+// Demo wrapper
+export default function App() {
+  const [isOpen, setIsOpen] = useState(true)
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-100 to-blue-100 flex items-center justify-center p-4">
+      <button
+        onClick={() => setIsOpen(true)}
+        className="px-8 py-4 bg-gradient-to-r from-pink-400 via-purple-500 to-blue-500 text-white font-bold rounded-full text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
+      >
+        Open Instruction Popup
+      </button>
+
+      <InstructionPopup
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onReady={() => {
+          alert('Ready to play!')
+          setIsOpen(false)
+        }}
+        storyTitle="Liburan ke Pantai"
+      />
     </div>
   )
 }

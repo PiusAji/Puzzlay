@@ -42,7 +42,7 @@ export function StoryCard({ story }: StoryCardProps) {
 
   return (
     <div
-      className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer group"
+      className="bg-gradient-to-br from-zinc-800 via-zinc-900 to-gray-900 backdrop-blur-md rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 cursor-pointer group"
       onClick={handleCardClick}
     >
       {/* Image Carousel */}
