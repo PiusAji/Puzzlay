@@ -116,15 +116,11 @@ export function Model({
 
   // Dispatch ready event when both model and texture are loaded
   useEffect(() => {
-    console.log('Model: Checking ready state', { modelReady, textureLoaded, hasScene: !!scene })
-
     if (modelReady && textureLoaded && scene) {
-      console.log('Model: All content ready, dispatching 3d-content-ready event')
       // Small delay to ensure everything is rendered
       const timer = setTimeout(() => {
         const event = new CustomEvent('3d-content-ready')
         window.dispatchEvent(event)
-        console.log('Model: 3d-content-ready event dispatched')
       }, 100)
 
       return () => clearTimeout(timer)

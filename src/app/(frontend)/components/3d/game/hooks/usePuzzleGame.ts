@@ -248,21 +248,10 @@ export function usePuzzleGame(modelUrl: string, _textureUrl: string) {
         if (!draggedPiece) return newStates
 
         let connectionMade = false
-        console.log(`--- Drag End for Piece: ${pieceId} ---`)
-        console.log(
-          `Dragged Piece Current Position (before snap):`,
-          draggedPiece.currentPosition.toArray(),
-        )
-        console.log(`Dragged Piece Original Position:`, draggedPiece.originalPosition.toArray())
-        console.log(`SNAP_THRESHOLD:`, SNAP_THRESHOLD)
 
         for (const partnerInfo of draggedPiece.partners) {
           const partner = newStates.find((p) => p.id === partnerInfo.partnerId)
           if (!partner) continue
-
-          console.log(`  Partner: ${partner.id}`)
-          console.log(`  Partner Current Position:`, partner.currentPosition.toArray())
-          console.log(`  Partner Original Position:`, partner.originalPosition.toArray())
 
           const distance = draggedPiece.currentPosition.distanceTo(partner.currentPosition)
 

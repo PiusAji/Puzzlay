@@ -28,18 +28,6 @@ export function LoadingSpinner({ contentReady = false }: LoadingSpinnerProps) {
     setIsClient(true)
   }, [])
 
-  // Only log on client side to prevent build errors
-  if (typeof window !== 'undefined') {
-    console.log(
-      'LoadingSpinner: Component rendered with progress:',
-      progress,
-      'contentReady:',
-      contentReady,
-      'isClient:',
-      isClient,
-    )
-  }
-
   // Start animation only on client side
   useEffect(() => {
     if (!isClient || animationStartedRef.current) {

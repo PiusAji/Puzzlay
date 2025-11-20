@@ -35,10 +35,7 @@ export function StoryCard3D({ story, position, index }: StoryCard3DProps) {
     }
   })
 
-  const handleCardClick = () => {
-    console.log('Navigate to story:', story.slug)
-    // You can implement navigation here later
-  }
+  const handleCardClick = () => {}
 
   return (
     <group ref={groupRef} position={position}>

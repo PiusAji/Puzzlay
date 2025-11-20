@@ -34,11 +34,7 @@ export function StoryCard({ story }: StoryCardProps) {
     }
   }, [emblaApi])
 
-  const handleCardClick = () => {
-    // Navigate to story detail page
-    console.log('Navigate to story:', story.slug)
-    // You can implement navigation here later
-  }
+  const handleCardClick = () => {}
 
   return (
     <div

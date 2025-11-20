@@ -41,9 +41,7 @@ export default function ModelViewerServer({
     }
   }, [setScene])
 
-  const handleCTAClick = () => {
-    console.log('CTA clicked - start game!')
-  }
+  const handleCTAClick = () => {}
 
   // Always render the same structure to avoid hydration mismatch
   return (
