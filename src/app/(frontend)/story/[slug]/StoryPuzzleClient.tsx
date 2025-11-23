@@ -72,9 +72,14 @@ export default function StoryPuzzleClient({ story, initialPuzzle }: StoryPuzzleC
   }, [completedPuzzles, currentPuzzleIndex])
 
   // Auto-unhide top-left panel on puzzle completion (desktop only)
+  // Auto-open mobile menu on puzzle completion (mobile only)
   useEffect(() => {
-    if (isCurrentPuzzleSolved && window.innerWidth >= 768) {
-      setIsTopLeftPanelCollapsed(false)
+    if (isCurrentPuzzleSolved) {
+      if (window.innerWidth >= 768) {
+        setIsTopLeftPanelCollapsed(false)
+      } else {
+        setIsMobileMenuOpen(true)
+      }
     }
   }, [isCurrentPuzzleSolved])
 
@@ -138,30 +143,34 @@ export default function StoryPuzzleClient({ story, initialPuzzle }: StoryPuzzleC
   return (
     <div className="relative w-full h-screen overflow-hidden pointer-events-none">
       {/* Mobile Hamburger Button - Puzzle Info */}
-      <button
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="md:hidden absolute top-4 left-4 z-50 p-3 rounded-full bg-gradient-to-br from-blue-500/80 to-purple-500/80 hover:from-blue-600/90 hover:to-purple-600/90 backdrop-blur-md border border-white/30 shadow-lg transition-all duration-200 pointer-events-auto"
-        aria-label="Toggle puzzle info"
-      >
-        {isMobileMenuOpen ? (
-          <XMarkIcon className="h-6 w-6 text-white" />
-        ) : (
-          <Bars3Icon className="h-6 w-6 text-white" />
-        )}
-      </button>
+      {!isHowToPlayOpen && (
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="md:hidden absolute top-4 left-4 z-50 p-3 rounded-full bg-gradient-to-br from-blue-500/80 to-purple-500/80 hover:from-blue-600/90 hover:to-purple-600/90 backdrop-blur-md border border-white/30 shadow-lg transition-all duration-200 pointer-events-auto"
+          aria-label="Toggle puzzle info"
+        >
+          {isMobileMenuOpen ? (
+            <XMarkIcon className="h-6 w-6 text-white" />
+          ) : (
+            <Bars3Icon className="h-6 w-6 text-white" />
+          )}
+        </button>
+      )}
 
       {/* Mobile Button - How to Play */}
-      <button
-        onClick={() => setIsHowToPlayOpen(!isHowToPlayOpen)}
-        className="md:hidden absolute bottom-4 left-4 z-50 p-3 rounded-full bg-gradient-to-br from-green-500/80 to-emerald-500/80 hover:from-green-600/90 hover:to-emerald-600/90 backdrop-blur-md border border-white/30 shadow-lg transition-all duration-200 pointer-events-auto"
-        aria-label="Toggle instructions"
-      >
-        {isHowToPlayOpen ? (
-          <XMarkIcon className="h-6 w-6 text-white" />
-        ) : (
-          <BookOpenIcon className="h-6 w-6 text-white" />
-        )}
-      </button>
+      {!isMobileMenuOpen && (
+        <button
+          onClick={() => setIsHowToPlayOpen(!isHowToPlayOpen)}
+          className="md:hidden absolute bottom-4 left-4 z-50 p-3 rounded-full bg-gradient-to-br from-green-500/80 to-emerald-500/80 hover:from-green-600/90 hover:to-emerald-600/90 backdrop-blur-md border border-white/30 shadow-lg transition-all duration-200 pointer-events-auto"
+          aria-label="Toggle instructions"
+        >
+          {isHowToPlayOpen ? (
+            <XMarkIcon className="h-6 w-6 text-white" />
+          ) : (
+            <BookOpenIcon className="h-6 w-6 text-white" />
+          )}
+        </button>
+      )}
 
       {/* Mobile Overlay for Puzzle Info */}
       {isMobileMenuOpen && (
@@ -296,7 +305,7 @@ export default function StoryPuzzleClient({ story, initialPuzzle }: StoryPuzzleC
       {/* Mobile Version - Bottom Slide Up */}
       <div
         className={`
-        md:hidden fixed bottom-0 left-0 right-0 text-white bg-gradient-to-t from-black/95 to-black/85 backdrop-blur-lg border-t border-white/20 pointer-events-auto z-40 rounded-t-3xl shadow-2xl
+        md:hidden fixed bottom-0 left-0 right-0 text-white bg-gradient-to-t from-black/95 to-black/85 backdrop-blur-lg border-t border-white/20 pointer-events-auto z-[60] rounded-t-3xl shadow-2xl
         transition-transform duration-300 ease-in-out pb-20
         ${isHowToPlayOpen ? 'translate-y-0' : 'translate-y-full'}
       `}
