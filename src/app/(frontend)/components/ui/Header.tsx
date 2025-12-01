@@ -320,7 +320,7 @@ export default function Header({ siteSettings }: HeaderProps) {
     // Show header after 13 seconds
     const timer = setTimeout(() => {
       setShowHeader(true)
-    }, 13000)
+    }, 4000)
 
     return () => clearTimeout(timer)
   }, [])
