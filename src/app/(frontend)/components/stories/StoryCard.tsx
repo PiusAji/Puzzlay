@@ -47,9 +47,9 @@ export function StoryCard({ story, index }: StoryCardProps) {
             {story.title}
           </h3>
 
-          {/* Description */}
+          {/* Description - Full text, no line clamp */}
           {story.description && (
-            <p className="text-white/70 text-sm leading-relaxed mb-4 line-clamp-3 flex-grow">
+            <p className="text-white/70 text-sm leading-relaxed mb-4 flex-grow">
               {story.description}
             </p>
           )}

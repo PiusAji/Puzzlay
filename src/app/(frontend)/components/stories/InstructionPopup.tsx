@@ -105,30 +105,6 @@ export function InstructionPopup({ isOpen, onClose, onReady, storyTitle }: Instr
               </ol>
             </div>
 
-            {/* Controls */}
-            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-lg elementMorph">
-              <h3 className="font-semibold text-blue-700 mb-3 flex items-center gap-2">
-                🎮 Kontrol Game
-              </h3>
-              <div className="space-y-2">
-                {[
-                  ['Klik Kiri', 'Pada potongan puzzle untuk drag & drop 🖱️', 'pink'],
-                  ['Klik', 'Pada tombol tengah mouse untuk memutar kamera 🔄', 'purple'],
-                  ['Klik Kanan', 'Untuk menggerakkan kamera 📹', 'blue'],
-                  ['Shift + Klik', 'Untuk menggerakkan kamera 🎥', 'cyan'],
-                ].map(([label, desc, color], i) => (
-                  <div className="flex items-start gap-3" key={i}>
-                    <span
-                      className={`bg-${color}-100 text-${color}-700 px-2 py-1 rounded-full text-xs font-medium elementMorph whitespace-nowrap`}
-                    >
-                      {label}
-                    </span>
-                    <span className="flex-1">{desc}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {/* Tips */}
             <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-4 rounded-lg elementMorph">
               <h3 className="font-semibold text-orange-700 mb-2 flex items-center gap-2">

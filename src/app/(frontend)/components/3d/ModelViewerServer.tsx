@@ -7,7 +7,6 @@ import type { SiteSettings, Nav, Story } from '../../../../lib/api'
 import { useRef, useEffect, useState } from 'react'
 import { useSceneStore } from './stores/useSceneStore'
 import ModelViewer from './ModelViewer'
-import TujuanPengembangan from '../TujuanPengembangan'
 import Footer from './ui/Footer'
 
 interface ModelViewerServerProps {
@@ -62,9 +61,6 @@ export default function ModelViewerServer({
         {/* Stories section with pointer events enabled for interactive content */}
         <div ref={storySectionRef} className="pointer-events-auto">
           <StoriesSection stories={stories} />
-        </div>
-        <div className="pointer-events-auto">
-          <TujuanPengembangan />
         </div>
         <Footer navigationData={navigationData} siteSettings={siteSettings} />
       </div>
