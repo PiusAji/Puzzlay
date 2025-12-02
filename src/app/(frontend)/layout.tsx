@@ -1,6 +1,13 @@
 import React from 'react'
 import CanvasWrapper from './components/3d/CanvasWrapper'
 import '../globals.css'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Puzzlay | Puzzle Interaktif 3D',
+  description:
+    'Media pembelajaran puzzle digital gambar berseri untuk meningkatkan keterampilan menulis narasi',
+}
 
 export default function RootLayout({
   children,

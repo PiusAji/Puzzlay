@@ -161,7 +161,8 @@ function InfoPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
                     <ProfileCard
                       name="Angel Veranita Sari Tupen"
                       role="Peneliti"
-                      imageUrl="https://avatar.iran.liara.run/public/girl"
+                      imageUrl="/image/penyusun.webp"
+                      imagePosition="translate-y-[-12px]"
                     />
                   </div>
 
@@ -172,12 +173,15 @@ function InfoPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
                       <ProfileCard
                         name="Prof. Dr. Ida Bagus Putrayasa, M.Pd."
                         role="Pembimbing 1"
-                        imageUrl="https://avatar.iran.liara.run/public/boy"
+                        imageUrl="/image/pembimbing1.webp"
+                        imagePosition="translate-y-[-12px]"
                       />
                       <ProfileCard
                         name="Prof. Dr. I Nyoman Sudiana, M.Pd."
                         role="Pembimbing 2"
-                        imageUrl="https://avatar.iran.liara.run/public/boy?username=nyoman"
+                        imageUrl="/image/pembimbing2.webp"
+                        imagePosition="translate-y-[-12px] translate-x-[5px]"
+                        imageScale={1.8} // Increase zoom to crop out other person
                       />
                     </div>
                   </div>
@@ -351,7 +355,7 @@ export default function Header({ siteSettings }: HeaderProps) {
       <div
         className={`fixed top-0 left-0 w-full z-40 transition-all duration-500 ${!showHeader ? 'opacity-0 pointer-events-none' : showInfoPopup ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
       >
-        <div className="pt-8 md:pt-3 py-3 md:py-4 px-4 md:px-8">
+        <div className="pt-4 md:pt-3 py-3 md:py-4 px-4 md:px-8">
           <div className="relative">
             {/* Full Navigation */}
             <div
